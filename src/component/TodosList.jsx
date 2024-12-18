@@ -1,6 +1,17 @@
+import { useEffect, useState } from "react";
+import initialTasks from "../data/todos";
+
 function TodosList() {
   const [tasks, setTasks] = useState(initialTasks);
+  const [filteredTasks, setFilteredTasks] = useState(tasks);
+
   const [newTask, setNewTask] = useState("");
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const newFilteredTasks = tasks.filter((task) => task.includes(search));
+    setFilteredTasks(newFilteredTasks);
+  }, [search, tasks]);
 
   const handleNewTaskSubmit = (event) => {
     event.preventDefault();
@@ -21,6 +32,15 @@ function TodosList() {
       <main className="container my-5">
         <h2 className="text-center mb-3">Todos</h2>
 
+        <div className="my-4">
+          <h2>Filtra i task</h2>
+          <input
+            type="text"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </div>
+
         <div className="mb-3">
           <form action="" className="d-flex" onSubmit={handleNewTaskSubmit}>
             <input
@@ -37,9 +57,9 @@ function TodosList() {
           <div>Test: {newTask}</div>
         </div>
 
-        {tasks.length > 0 ? (
+        {filteredTasks.length > 0 ? (
           <ul className="list-group">
-            {tasks.map((curTask, index) => (
+            {filteredTasks.map((curTask, index) => (
               <li key={index} className="list-group-item">
                 <span>{curTask}</span>
                 <button
